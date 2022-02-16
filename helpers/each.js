@@ -1,6 +1,8 @@
 const {
   appendContextPath, createFrame, blockParams, isPromise
-} = require('../utils')
+} = require('../utils'),
+  { Readable } = require('stream')
+const { resolve } = require('eslint-plugin-promise/rules/lib/promise-statics')
 
 module.exports = (handlebars) => {
   handlebars.registerHelper('each', async function(context, options) {
@@ -68,6 +70,19 @@ module.exports = (handlebars) => {
         for (let j = context.length; i < j; i++) {
           execIteration(i, i, i === context.length - 1)
         }
+      } else if (context instanceof Readable) {
+        const newContext = []
+        await new Promise((resolve, reject) => {
+          context.on('data', (item) => {
+            newContext.push(item)
+          }).on('end', () => {
+            context = newContext
+            for (let j = context.length; i < j; i++) {
+              execIteration(i, i, i === context.length - 1)
+            }
+            resolve()
+          }).once('error', e => reject(e))
+        })
       } else {
         let priorKey
 

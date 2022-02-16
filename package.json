@@ -4,8 +4,9 @@
   "description": "Adding async function support to handlebars helpers",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --ui bdd --recursive --timeout 15000"
   },
+  "repository": "https://github.com/gastonrobledo/handlebars-async-helpers",
   "author": "Gaston Robledo",
   "license": "MIT",
   "devDependencies": {

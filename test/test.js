@@ -1,6 +1,8 @@
 const should = require('should'),
+    { PassThrough } = require('stream'),
     Handlebars = require('handlebars'),
     asyncHelpers = require('../index')
+const { resolve } = require('eslint-plugin-promise/rules/lib/promise-statics')
 
 describe('Test async helpers', () => {
 
@@ -234,5 +236,43 @@ describe('Test async helpers', () => {
 
 
 
+    })
+
+    it('Test single variable be a promise value', async () => {
+        const hbs = asyncHelpers(Handlebars),
+          template = `<p>{{value}}</p>`,
+          expected = `<p>Gaston Robledo</p>`
+        const compiled = hbs.compile(template),
+              result = await compiled({
+                  value: new Promise((resolve) => resolve('Gaston Robledo'))
+              })
+        should.equal(result, expected)
+    })
+
+    it('Test each with a stream source', async () => {
+        const hbs = asyncHelpers(Handlebars),
+          template = `{{#each source}}<p>{{this}}</p>{{/each}}`,
+          expected = `<p>Gaston</p><p>Joaquin</p><p>James</p>`,
+          source = new PassThrough()
+        source.push('Gaston')
+        source.push('Joaquin')
+        source.end('James')
+        const compiled = hbs.compile(template),
+              result = await compiled({
+                  source
+              })
+        should.equal(result, expected)
+    })
+
+    it('Test normal usage of handlebars', async () => {
+        const hbs = asyncHelpers(Handlebars),
+          template = `{{#each source}}<p>{{this}}</p>{{/each}}{{#if showThis}}<p>Showed</p>{{/if}}`,
+          expected = `<p>Gaston</p><p>Joaquin</p><p>James</p><p>Showed</p>`,
+          compiled = hbs.compile(template),
+          result = await compiled({
+              source: ['Gaston', 'Joaquin', 'James'],
+              showThis: true
+          })
+        should.equal(result, expected)
     })
 })

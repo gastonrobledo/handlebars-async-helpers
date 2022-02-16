@@ -1,6 +1,4 @@
-const {
-    registerCoreHelpers
-} = require('./helpers')
+const { registerCoreHelpers } = require('./helpers')
 
 function asyncHelpers(handlebars) {
   const _compile = handlebars.compile,
@@ -45,7 +43,7 @@ function asyncHelpers(handlebars) {
   handlebars.compile = function() {
     const compiled = _compile.apply(handlebars, [...arguments, { noEscape: true }])
 
-    return async function(context, execOptions) {
+    return function(context, execOptions) {
       context = context || {}
 
       return compiled.call(handlebars, context, execOptions)
