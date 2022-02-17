@@ -293,4 +293,16 @@ describe('Test async helpers', () => {
           result = await compiled()
         should.equal(result, expected)
     })
+
+    it('Test synchronous helper', async () => {
+        const hbs = asyncHelpers(Handlebars),
+          template = '<div>Value: {{#multiply 100 20}}{{/multiply}}</div>',
+          expected = '<div>Value: 2000</div>'
+        hbs.registerHelper('multiply', (a, b) => {
+            return a * b
+        })
+        const compiled = hbs.compile(template),
+          result = await compiled()
+        should.equal(result, expected)
+    })
 })
