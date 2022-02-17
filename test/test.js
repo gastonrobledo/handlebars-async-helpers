@@ -275,4 +275,22 @@ describe('Test async helpers', () => {
           })
         should.equal(result, expected)
     })
+
+    it('Test nested partials', async () => {
+        const hbs = asyncHelpers(Handlebars),
+          template = '<div>Parent {{> child}}</div>',
+          child = '<div>Child: {{> grandChild}}</div>',
+          grandChild = '<p>Grand Child: {{#delayed 500}}{{/delayed}}</p>',
+          expected = '<div>Parent <div>Child: <p>Grand Child: Hello!</p></div></div>'
+        hbs.registerHelper('delayed', (time) => {
+            return new Promise((resolve) => {
+                setTimeout(() => resolve('Hello!'), time)
+            })
+        })
+        hbs.registerPartial('child', child)
+        hbs.registerPartial('grandChild', grandChild)
+        const compiled = hbs.compile(template),
+          result = await compiled()
+        should.equal(result, expected)
+    })
 })
