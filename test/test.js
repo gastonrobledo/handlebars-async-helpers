@@ -10,7 +10,7 @@ describe('Test async helpers', () => {
         const hbs = asyncHelpers(Handlebars)
 
         hbs.registerHelper('sleep', async () => new Promise((resolve) => {
-            setTimeout(() => resolve('Done!'), 1000)
+            setTimeout(() => resolve('Done!'), 50)
         }))
 
         const result = await hbs.compile('Mark when is completed: {{#sleep}}{{/sleep}}')()
@@ -22,7 +22,7 @@ describe('Test async helpers', () => {
         const hbs = asyncHelpers(Handlebars)
         hbs.registerPartial('myPartial', 'Some text: {{#sleep}}{{/sleep}}')
         hbs.registerHelper('sleep', async () => new Promise((resolve) => {
-            setTimeout(() => resolve('Done!'), 1000)
+            setTimeout(() => resolve('Done!'), 50)
         }))
 
         const result = await hbs.compile('Mark when is completed: {{> myPartial}}')()
@@ -33,7 +33,7 @@ describe('Test async helpers', () => {
     it('Test each helper with async helpers inside', async () => {
         const hbs = asyncHelpers(Handlebars)
         hbs.registerHelper('sleep', async () => new Promise((resolve) => {
-            setTimeout(() => resolve('Done!'), 1000)
+            setTimeout(() => resolve('Done!'), 50)
         }))
 
         const items = [
@@ -62,7 +62,7 @@ describe('Test async helpers', () => {
                 'Drew'
             ])
         hbs.registerHelper('getArray', () => new Promise((resolve) => {
-            setTimeout(() => resolve(items), 1000)
+            setTimeout(() => resolve(items), 50)
         }))
 
         const result = await hbs.compile('Devs \n{{#each (getArray items)}}Dev: {{this}}\n{{/each}}')({items})
@@ -98,7 +98,7 @@ describe('Test async helpers', () => {
                       </div>`
         hbs.registerHelper('ipInfo', async () => {
             await new Promise((resolve) => {
-                setTimeout(resolve, 500)
+                setTimeout(resolve, 50)
             })
             return {country: 'Canada'}
         })
@@ -120,7 +120,7 @@ describe('Test async helpers', () => {
             expected = `<p>Show</p>`
         hbs.registerHelper('shouldShow', async () => {
             await new Promise((resolve) => {
-                setTimeout(resolve, 500)
+                setTimeout(resolve, 50)
             })
             return true
         })
@@ -137,7 +137,7 @@ describe('Test async helpers', () => {
             expected = `<p>Show</p>`
         hbs.registerHelper('shouldShow', async () => {
             await new Promise((resolve) => {
-                setTimeout(resolve, 500)
+                setTimeout(resolve, 50)
             })
             return null
         })
@@ -151,7 +151,7 @@ describe('Test async helpers', () => {
     it('Test with custom helpers and complex replacements', async() => {
         const timeout = ms => new Promise(res => setTimeout(res, ms)),
                 delay = async function delayFn() {
-                    await timeout(100)
+                    await timeout(50)
                     return 1000
                 },
             hbs = asyncHelpers(Handlebars)
@@ -224,7 +224,7 @@ describe('Test async helpers', () => {
 
         hbs.registerHelper('delay', delay)
         hbs.registerHelper('cursor', async(options) => {
-            await timeout(1000)
+            await timeout(50)
             return [{ name: 'test' }, { name: 'test2' }]
         })
 
@@ -280,7 +280,7 @@ describe('Test async helpers', () => {
         const hbs = asyncHelpers(Handlebars),
           template = '<div>Parent {{> child}}</div>',
           child = '<div>Child: {{> grandChild}}</div>',
-          grandChild = '<p>Grand Child: {{#delayed 500}}{{/delayed}}</p>',
+          grandChild = '<p>Grand Child: {{#delayed 50}}{{/delayed}}</p>',
           expected = '<div>Parent <div>Child: <p>Grand Child: Hello!</p></div></div>'
         hbs.registerHelper('delayed', (time) => {
             return new Promise((resolve) => {

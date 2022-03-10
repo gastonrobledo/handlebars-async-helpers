@@ -1,8 +1,7 @@
 const {
-  appendContextPath, createFrame, blockParams, isPromise
-} = require('../utils'),
+    appendContextPath, createFrame, blockParams, isPromise
+  } = require('../utils'),
   { Readable } = require('stream')
-const { resolve } = require('eslint-plugin-promise/rules/lib/promise-statics')
 
 module.exports = (handlebars) => {
   handlebars.registerHelper('each', async function(context, options) {
@@ -11,11 +10,11 @@ module.exports = (handlebars) => {
     }
 
     let { fn } = options,
-        { inverse } = options,
-        i = 0,
-        ret = [],
-        data,
-        contextPath
+      { inverse } = options,
+      i = 0,
+      ret = [],
+      data,
+      contextPath
 
     if (options.data && options.ids) {
       contextPath = `${appendContextPath(options.data.contextPath, options.ids[0])}.`
@@ -41,7 +40,7 @@ module.exports = (handlebars) => {
         }
       }
 
-      ret.push(fn(context[field], {
+      ret.push(await fn(context[field], {
         data,
         blockParams: blockParams(
           [context[field], field],
@@ -57,28 +56,28 @@ module.exports = (handlebars) => {
       if (Array.isArray(context)) {
         for (let j = context.length; i < j; i++) {
           if (i in context) {
-            execIteration(i, i, i === context.length - 1)
+            await execIteration(i, i, i === context.length - 1)
           }
         }
       } else if (global.Symbol && context[global.Symbol.iterator]) {
         const newContext = [],
-              iterator = context[global.Symbol.iterator]()
+          iterator = context[global.Symbol.iterator]()
         for (let it = iterator.next(); !it.done; it = iterator.next()) {
           newContext.push(it.value)
         }
         context = newContext
         for (let j = context.length; i < j; i++) {
-          execIteration(i, i, i === context.length - 1)
+          await execIteration(i, i, i === context.length - 1)
         }
       } else if (context instanceof Readable) {
         const newContext = []
         await new Promise((resolve, reject) => {
           context.on('data', (item) => {
             newContext.push(item)
-          }).on('end', () => {
+          }).on('end', async() => {
             context = newContext
             for (let j = context.length; i < j; i++) {
-              execIteration(i, i, i === context.length - 1)
+              await execIteration(i, i, i === context.length - 1)
             }
             resolve()
           }).once('error', e => reject(e))
@@ -91,13 +90,13 @@ module.exports = (handlebars) => {
           // the last iteration without have to scan the object twice and create
           // an itermediate keys array.
           if (priorKey !== undefined) {
-            execIteration(priorKey, i - 1)
+            await execIteration(priorKey, i - 1)
           }
           priorKey = key
           i++
         }
         if (priorKey !== undefined) {
-          execIteration(priorKey, i - 1, true)
+          await execIteration(priorKey, i - 1, true)
         }
       }
     }
@@ -106,6 +105,6 @@ module.exports = (handlebars) => {
       ret = inverse(this)
     }
 
-    return (await Promise.all(ret)).join('')
+    return ret.join('')
   })
 }
