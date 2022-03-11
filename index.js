@@ -40,8 +40,8 @@ function asyncHelpers(handlebars) {
     return _template(spec, handlebars)
   }
 
-  handlebars.compile = function() {
-    const compiled = _compile.apply(handlebars, [...arguments, { noEscape: true }])
+  handlebars.compile = function(template, options) {
+    const compiled = _compile.apply(handlebars, [template, { ...options, noEscape: true }])
 
     return function(context, execOptions) {
       context = context || {}
