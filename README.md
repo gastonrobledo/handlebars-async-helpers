@@ -4,7 +4,7 @@ Library that adds support to asynchronous function helpers to handlebars lib.
 
 ### How to install
 ```shell
-npm install handlerbars-async-helpers
+npm install handlebars-async-helpers
 ```
 
 ### Hot wo use it.
