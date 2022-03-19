@@ -1,6 +1,6 @@
 {
   "name": "handlebars-async-helpers",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Adding async function support to handlebars helpers",
   "main": "index.js",
   "scripts": {
@@ -9,6 +9,9 @@
   "repository": "https://github.com/gastonrobledo/handlebars-async-helpers",
   "author": "Gaston Robledo",
   "license": "MIT",
+  "peerDependencies": {
+    "handlebars": "4.7.x"
+  },
   "devDependencies": {
     "handlebars": "^4.7.7",
     "eslint": "^8.9.0",
