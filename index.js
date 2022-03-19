@@ -3,7 +3,7 @@ const { registerCoreHelpers } = require('./helpers')
 function asyncHelpers(handlebars) {
 
   const _compile = handlebars.compile,
-    _template = handlebars.VM.template
+        _template = handlebars.VM.template
 
   handlebars.JavaScriptCompiler = class extends handlebars.JavaScriptCompiler {
 
@@ -38,7 +38,7 @@ function asyncHelpers(handlebars) {
   handlebars.template = function(spec) {
     spec.main_d = (prog, props, container, depth, data, blockParams, depths) => async(context) => {
       // const main = await spec.main
-      return spec.main(container, context, container.helpers, container.partials, data, blockParams, depths)
+      const v = spec.main(container, context, container.helpers, container.partials, data, blockParams, depths)
       return v
     }
     return _template(spec, handlebars)
