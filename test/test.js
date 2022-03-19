@@ -160,7 +160,7 @@ describe('Test async helpers', () => {
             extend: async function(partial, options) {
                 let context = this,
                     // noinspection JSUnresolvedVariable
-                    template = Handlebars.partials[partial] || options.data?.partials?.partial
+                    template = hbs.partials[partial] || options.data?.partials?.partial
 
                 // Partial template required
                 if (typeof template === 'undefined') {
@@ -171,7 +171,7 @@ describe('Test async helpers', () => {
                 await options.fn(context)
 
                 if (!(typeof template === 'function')) {
-                    template = Handlebars.compile(template)
+                    template = hbs.compile(template)
                 }
 
                 // Render final layout partial with revised blocks
