@@ -1,5 +1,7 @@
 const { registerCoreHelpers } = require('./helpers')
 
+const isPromise = (obj) => !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function'
+
 function asyncHelpers(hbs) {
 
   const handlebars = hbs.create(),
@@ -40,10 +42,19 @@ function asyncHelpers(hbs) {
   handlebars.JavaScriptCompiler = asyncCompiler
 
   const _compile = handlebars.compile,
-        _template = handlebars.VM.template
+        _template = handlebars.VM.template,
+        _escapeExpression = handlebars.escapeExpression,
+        escapeExpression = function(value) {
+          if(isPromise(value)) {
+            return value.then((v) => _escapeExpression(v))
+          }
+          return _escapeExpression(value)
+        }
+
   handlebars.template = function(spec) {
     spec.main_d = (prog, props, container, depth, data, blockParams, depths) => async(context) => {
       // const main = await spec.main
+      container.escapeExpression = escapeExpression
       const v = spec.main(container, context, container.helpers, container.partials, data, blockParams, depths)
       return v
     }
@@ -51,7 +62,7 @@ function asyncHelpers(hbs) {
   }
 
   handlebars.compile = function(template, options) {
-    const compiled = _compile.apply(handlebars, [template, { ...options, noEscape: true }])
+    const compiled = _compile.apply(handlebars, [template, { ...options }])
 
     return function(context, execOptions) {
       context = context || {}

@@ -1,6 +1,6 @@
 {
   "name": "handlebars-async-helpers",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Adding async function support to handlebars helpers",
   "main": "index.js",
   "scripts": {

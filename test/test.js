@@ -305,4 +305,16 @@ describe('Test async helpers', () => {
           result = await compiled()
         should.equal(result, expected)
     })
+
+    it('Test custom helper without noEscape', async () => {
+        const hbs = asyncHelpers(Handlebars),
+          template = '<div>Value: {{toUpperAsync "my text"}}</div>',
+          expected = '<div>Value: MY TEXT</div>'
+        hbs.registerHelper('toUpperAsync', async (value) => {
+            return Promise.resolve(value.toUpperCase())
+        })
+        const compiled = hbs.compile(template),
+          result = await compiled()
+        should.equal(result, expected)
+    })
 })
