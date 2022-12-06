@@ -317,4 +317,9 @@ describe('Test async helpers', () => {
           result = await compiled()
         should.equal(result, expected)
     })
+
+    it('check version', () => {
+        const hbs = asyncHelpers(Handlebars)
+        should(hbs.ASYNC_VERSION).equal(require('../package.json').version)
+    })
 })
