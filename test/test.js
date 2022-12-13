@@ -70,7 +70,7 @@ describe('Test async helpers', () => {
 
     })
 
-    it ('Test lookupProperty', async() => {
+    it('Test lookupProperty', async() => {
         const hbs = asyncHelpers(Handlebars),
             template = `{{person.[0].firstName}}`,
             expected = 'John'
@@ -83,7 +83,7 @@ describe('Test async helpers', () => {
         should.equal(result, expected)
     })
 
-    it ('Test lookupProperty with nested promises', async() => {
+    it('Test lookupProperty with nested promises', async() => {
         const hbs = asyncHelpers(Handlebars),
             template = `{{person.[0].firstName}}`,
             expected = 'John'
