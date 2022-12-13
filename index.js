@@ -52,10 +52,20 @@ function asyncHelpers(hbs) {
           return _escapeExpression(value)
         }
 
+  function lookupProperty(containerLookupProperty) {
+    return function(parent, propertyName) {
+      if (isPromise(parent)) {
+        return parent.then((p) => containerLookupProperty(p, propertyName))
+      }
+      return containerLookupProperty(parent, propertyName)
+    }
+  }
+
   handlebars.template = function(spec) {
     spec.main_d = (prog, props, container, depth, data, blockParams, depths) => async(context) => {
       // const main = await spec.main
       container.escapeExpression = escapeExpression
+      container.lookupProperty = lookupProperty(container.lookupProperty)
       const v = spec.main(container, context, container.helpers, container.partials, data, blockParams, depths)
       return v
     }

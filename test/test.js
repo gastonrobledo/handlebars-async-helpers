@@ -70,6 +70,32 @@ describe('Test async helpers', () => {
 
     })
 
+    it ('Test lookupProperty', async() => {
+        const hbs = asyncHelpers(Handlebars),
+            template = `{{person.[0].firstName}}`,
+            expected = 'John'
+        const compiled = hbs.compile(template),
+            result = await compiled({
+                person: [
+                    Promise.resolve({firstName: 'John', lastName: 'Q'}),
+                ]
+            })
+        should.equal(result, expected)
+    })
+
+    it ('Test lookupProperty with nested promises', async() => {
+        const hbs = asyncHelpers(Handlebars),
+            template = `{{person.[0].firstName}}`,
+            expected = 'John'
+        const compiled = hbs.compile(template),
+            result = await compiled({
+                person: Promise.all([
+                    Promise.resolve({firstName: 'John', lastName: 'Q'}),
+                ])
+            })
+        should.equal(result, expected)
+    })
+
     it('Test with helper', async () => {
         const hbs = asyncHelpers(Handlebars),
             template = `<div class="names">
