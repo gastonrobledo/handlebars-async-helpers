@@ -1,4 +1,4 @@
-const package = require('./package.json')
+const app = require('./package.json')
 const { registerCoreHelpers } = require('./helpers')
 
 const isPromise = (obj) => !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function'
@@ -81,7 +81,7 @@ function asyncHelpers(hbs) {
       return compiled.call(handlebars, context, execOptions)
     }
   }
-  handlebars.ASYNC_VERSION = package.version
+  handlebars.ASYNC_VERSION = app.version
 
   registerCoreHelpers(handlebars)
 
