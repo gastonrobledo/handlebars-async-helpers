@@ -7,7 +7,7 @@ Library that adds support to asynchronous function helpers to handlebars lib.
 npm install handlebars-async-helpers
 ```
 
-### Hot wo use it.
+### How to use
 ```javascript
 const handlebars = require('handlebars'),
       asyncHelpers = require('handlebars-async-helpers')
