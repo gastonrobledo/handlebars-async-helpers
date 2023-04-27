@@ -15,7 +15,9 @@ function asyncHelpers(hbs) {
 
           mergeSource(varDeclarations) {
             const sources = super.mergeSource(varDeclarations)
-            return sources.prepend('return (async () => {').add(' })()')
+            sources.prepend('return (async () => {')
+            sources.add(' })()')
+            return sources
           }
 
           appendToBuffer(source, location, explicit) {
