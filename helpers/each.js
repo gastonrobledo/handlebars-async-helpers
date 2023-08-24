@@ -102,9 +102,9 @@ module.exports = (handlebars) => {
     }
 
     if (i === 0) {
-      ret = inverse(this)
+      return inverse(this);
+    } else {
+      return ret.join('');
     }
-
-    return ret.join('')
   })
 }
