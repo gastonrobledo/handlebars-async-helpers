@@ -10,7 +10,7 @@
   "author": "Gaston Robledo",
   "license": "MIT",
   "peerDependencies": {
-    "handlebars": "4.7.6"
+    "handlebars": "^4.7.6"
   },
   "devDependencies": {
     "handlebars": "^4.7.6",
