@@ -68,6 +68,9 @@ function asyncHelpers(hbs) {
       // const main = await spec.main
       container.escapeExpression = escapeExpression
       container.lookupProperty = lookupProperty(container.lookupProperty)
+      if(depths.length == 0){
+        depths = [data.root]
+      }
       const v = spec.main(container, context, container.helpers, container.partials, data, blockParams, depths)
       return v
     }
