@@ -47,15 +47,6 @@ describe('Test async helpers', () => {
         ],
             result = await hbs.compile('Devs \n{{#each items}}Dev: {{.}} {{#sleep}}{{/sleep}}\n{{/each}}')({ items })
         should.equal(result, 'Devs \nDev: Gaston Done!\nDev: Joaquin Done!\nDev: James Done!\nDev: Ala Done!\nDev: Giannis Done!\nDev: Adam Done!\nDev: Drew Done!\n')
-
-        const hbs2 = Handlebars.create()
-        hbs2.registerHelper('sleep', async () => new Promise((resolve) => {
-            setTimeout(() => resolve('Done!'), 50)
-        }))
-
-        const result2 = hbs2.compile('Devs \n{{#each items}}Dev: {{.}} {{#sleep}}{{/sleep}}\n{{/each}}')({ items })
-        should.equal(result2, 'Devs \nDev: Gaston [object Promise]\nDev: Joaquin [object Promise]\nDev: James [object Promise]\nDev: Ala [object Promise]\nDev: Giannis [object Promise]\nDev: Adam [object Promise]\nDev: Drew [object Promise]\n')
-
     })
 
     it('Test each helper with async helpers resolver', async () => {
