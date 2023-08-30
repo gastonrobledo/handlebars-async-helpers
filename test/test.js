@@ -344,6 +344,14 @@ describe('Test async helpers', () => {
         should.equal(result, expected)
     })
 
+    it('Test each helper with an empty item list', async () => {
+        const hbs = asyncHelpers(Handlebars)
+
+        const items = [],
+            result = await hbs.compile('Devs \n{{#each items}}{{/each}}')({items})
+        should.equal(result, 'Devs \n')
+    })
+
     it('check version', () => {
         const hbs = asyncHelpers(Handlebars)
         should(hbs.ASYNC_VERSION).equal(require('../package.json').version)
