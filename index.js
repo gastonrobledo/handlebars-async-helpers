@@ -99,7 +99,7 @@ function asyncHelpers(hbs) {
         const resultProxy = new Proxy(result, {
           then(cb) {
             result.then(res => {
-              if (indent) {
+              if (indent && typeof res === 'string') {
                 const lines = res.split('\n');
                 for (let i = 0, l = lines.length; i < l; i++) {
                   if (!lines[i] && i + 1 === l) {
