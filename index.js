@@ -79,45 +79,17 @@ function asyncHelpers(hbs) {
 
     return function(context, execOptions) {
       context = context || {}
-      let indent = false;
-      if (execOptions?.indent) {
-        execOptions.indent = undefined
-        indent = true
-      }
       const result = compiled.call(handlebars, context, execOptions)
-      if (!indent) {
-        return result
-      } else {
-
-
+      
+      if (isPromise(result)) {
         // this are dummy methods to work with handlebar code, it is only designed for usage with that, otherwise it may break!
-        result.split = () => { return result }
+        result.split = () => { return [] }
         result.join = () => { return result }
-        result.length = 0
 
-        // this is a proxy to post process the promise result, it overrides the then method and therefore does the indent split - join job after the result is here!
-        const resultProxy = new Proxy(result, {
-          then(cb) {
-            result.then(res => {
-              if (indent && typeof res === 'string') {
-                const lines = res.split('\n');
-                for (let i = 0, l = lines.length; i < l; i++) {
-                  if (!lines[i] && i + 1 === l) {
-                    break;
-                  }
-
-                  lines[i] = indent + lines[i];
-                }
-                res = lines.join('\n');
-              }
-              return cb(res)
-            })
-          }
-        })
-
-        return resultProxy
+        return result
 
       }
+      return result
     }
   }
   handlebars.ASYNC_VERSION = app.version
