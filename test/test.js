@@ -390,6 +390,37 @@ describe('Test async helpers', () => {
         should.equal(result, expected)
     })
 
+    it('Test indentation with async partial', async () => {
+        const hbs = asyncHelpers(Handlebars),
+            template = `<div>Parent 
+                            {{> child}}
+                            <div class="test">
+                                {{> child}}
+                            </div>
+                        </div>`,
+            child = '<div>Child:\n\t\t\t{{> grandChild}}\n</div>',
+            grandChild = '<p>\nGrand Child: {{#delayed 50}}\n{{/delayed}}\n</p>'
+
+        hbs.registerHelper('delayed', (time) => {
+            return new Promise((resolve) => {
+                setTimeout(() => resolve('Hello!'), time)
+            })
+        })
+
+
+        hbs.registerPartial('child', child)
+        hbs.registerPartial('grandChild', grandChild)
+
+        const compiled = hbs.compile(template)
+
+            const result = compiled()
+            await result.should.be.fulfilled();
+
+
+
+
+    })
+
     it('Test synchronous helper', async () => {
         const hbs = asyncHelpers(Handlebars),
             template = '<div>Value: {{#multiply 100 20}}{{/multiply}}</div>',

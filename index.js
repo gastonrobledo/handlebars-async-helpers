@@ -82,8 +82,17 @@ function asyncHelpers(hbs) {
 
     return function(context, execOptions) {
       context = context || {}
+      const result = compiled.call(handlebars, context, execOptions)
+      
+      if (isPromise(result)) {
+        // this are dummy methods to work with handlebar code, it is only designed for usage with that, otherwise it may break!
+        result.split = () => { return [] }
+        result.join = () => { return result }
 
-      return compiled.call(handlebars, context, execOptions)
+        return result
+
+      }
+      return result
     }
   }
   handlebars.ASYNC_VERSION = app.version
